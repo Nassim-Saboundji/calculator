@@ -1,4 +1,20 @@
+/* :root {
+    font-size: calc(1em + 1vw);
+} */
+
+.display {
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+    height: 5vh;
+}
+
 .digits {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+}
+
+button {
+    flex-basis: 20%;
+    height: 5vh;
 }
