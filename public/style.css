@@ -6,15 +6,18 @@
     border-width: 2px;
     border-style: solid;
     border-color: black;
+    background-color: rgb(114, 114, 114);
     height: 5vh;
+    margin-bottom: 1vh;
 }
 
 .digits {
     display: flex;
     flex-wrap: wrap;
+    gap: 10px;
 }
 
-button {
-    flex-basis: 20%;
+.digit {
+    flex-basis: 19%;
     height: 5vh;
 }
