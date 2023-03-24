@@ -20,7 +20,6 @@ function addToDisplay(key) {
 
     if (key.innerText === '=') {
         compute()
-        display.dataset.previousKeyType = key.dataset.keyType
         return
     }
 
@@ -31,7 +30,14 @@ function addToDisplay(key) {
         return
     }
 
-    display.innerText += ' ' + key.innerText
+    if (key.dataset.keyType === 'operator' ) {
+        // Using innerHTML to get proper whitespace.
+        // Safe because we get the key from an innerText
+        // before using innerHTML.
+        display.innerHTML += ` ${key.innerText}&nbsp`
+    } else {
+        display.innerText += key.innerText
+    }
 }
 
 function main() {
