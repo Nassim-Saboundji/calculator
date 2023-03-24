@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
     <link href="./style.css" rel="stylesheet">
+    <script defer src="./main.js"></script>
 </head>
 <body>
     <header>
@@ -17,34 +18,36 @@
 
     <div>
         <div class="calculator-body">
-            <div class="display"></div>
-            <div class="digits">
-                <button class="digit">7</button>
-                <button class="digit">8</button>
-                <button class="digit">9</button>
-                <button class="digit">&#40</button>
-                <button class="digit">&#41</button>
-                <button class="digit">4</button>
-                <button class="digit">5</button>
-                <button class="digit">6</button>
-                <button class="digit">&#215</button>
-                <button class="digit">&#247</button>
-                <button class="digit">1</button>
-                <button class="digit">2</button>
-                <button class="digit">3</button>
-                <button class="digit">+</button>
-                <button class="digit">-</button>
-                <button class="digit">0</button>
-                <button class="digit">&#8730</button>
-                <button class="digit">^</button>
-                <button class="digit">%</button>
-                <button class="digit">M+</button>
-                <button class="digit">M-</button>
-                <button class="digit">MR</button>
-                <button class="digit">MC</button>
+            <div id="display"></div>
+            <div class="keyboard" data-previous-key-type>
+                <button class="key" data-key-type="digit">7</button>
+                <button class="key" data-key-type="digit">8</button>
+                <button class="key" data-key-type="digit">9</button>
+                <button class="key" data-key-type="operator">&#40</button>
+                <button class="key" data-key-type="operator">&#41</button>
+                <button class="key" data-key-type="digit">4</button>
+                <button class="key" data-key-type="digit">5</button>
+                <button class="key" data-key-type="digit">6</button>
+                <button class="key" data-key-type="operator">&#215</button>
+                <button class="key" data-key-type="operator">&#247</button>
+                <button class="key" data-key-type="digit">1</button>
+                <button class="key" data-key-type="digit">2</button>
+                <button class="key" data-key-type="digit">3</button>
+                <button class="key" data-key-type="operator">+</button>
+                <button class="key" data-key-type="operator">-</button>
+                <button class="key" data-key-type="digit">0</button>
+                <button class="key" data-key-type="digit">.</button>
+                <button class="key" data-key-type="operator">&#8730</button>
+                <button class="key" data-key-type="operator">^</button>
+                <button class="key" data-key-type="operator">%</button>
+                <button class="key" data-key-type="operator">M+</button>
+                <button class="key" data-key-type="operator">M-</button>
+                <button class="key" data-key-type="operator">MR</button>
+                <button class="key" data-key-type="operator">MC</button>
+                <button class="key" data-key-type="operator">DEL</button>
+                <button class="key" data-key-type="operator">=</button>
             </div>
         </div>
-
     </div>
 </body>
 </html>

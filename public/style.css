@@ -2,22 +2,23 @@
     font-size: calc(1em + 1vw);
 } */
 
-.display {
+
+#display {
     border-width: 2px;
     border-style: solid;
     border-color: black;
-    background-color: rgb(114, 114, 114);
     height: 5vh;
     margin-bottom: 1vh;
+    padding: 1em;
 }
 
-.digits {
+.keyboard {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
 
-.digit {
+.key {
     flex-basis: 19%;
     height: 5vh;
 }
