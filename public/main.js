@@ -1,8 +1,31 @@
+
+// RPN = Reverse Polish Notation
+function convertToRPN(expression) {
+    console.log(expression)
+    const RPNotation = []
+    const operators = []
+
+    const operatorSet = new Set(['+', '-', '×', '÷', '√', '^', '%'])
+
+    for (const symbol of expression) {
+        if (operatorSet.has(symbol)) {
+            operators.push(symbol)
+            continue
+        }
+
+        
+    }
+}
+
+
 function compute() {
     const display = document.getElementById('display')
     const displayContent = display.innerText
-    const operation = displayContent.split(' ')
-    console.log(operation)
+    const expression = displayContent.split('\xa0')
+    .filter(s => {
+        if (s !== '') return s
+    })
+    const RPNotation = convertToRPN(expression)
 }
 
 
@@ -24,9 +47,9 @@ function addToDisplay(key) {
     }
 
     if (key.innerText === 'DEL') {
-        const displayContent = display.innerText.split(' ')
+        const displayContent = display.innerText.split('\xa0')
         displayContent.pop()
-        display.innerText = displayContent.join(' ')
+        display.innerText = displayContent.join('\xa0')
         return
     }
 
@@ -34,7 +57,7 @@ function addToDisplay(key) {
         // Using innerHTML to get proper whitespace.
         // Safe because we get the key from an innerText
         // before using innerHTML.
-        display.innerHTML += ` ${key.innerText}&nbsp`
+        display.innerHTML += `&nbsp${key.innerText}&nbsp`
     } else {
         display.innerText += key.innerText
     }
