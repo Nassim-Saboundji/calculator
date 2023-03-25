@@ -17,18 +17,55 @@ function convertToRPN(expression) {
     }
 }
 
+function convertToJS(expression) {
+    const operatorMap = new Map([
+        ['+', '+'],
+        ['-', '-'],
+        ['×', '*'],
+        ['÷', '/'],
+        ['√', '** (1/2)'],
+        ['^', '**'],
+        ['%', '%']
+    ])
 
-function compute() {
-    const display = document.getElementById('display')
+    let jsExpressionArray = []
+    let buffer = []
+    for (const symbol of expression) {
+    
+        if (symbol === '√') {
+            buffer.push(operatorMap.get('√'))
+            continue
+        }
+
+        if (operatorMap.get(symbol)) {
+            jsExpressionArray.push(operatorMap.get(symbol))
+            continue
+        }
+
+        jsExpressionArray.push(symbol)
+        if (buffer.length !== 0) {
+            jsExpressionArray.push(buffer[0])
+            buffer = []
+        }
+    }
+
+    return jsExpressionArray.join(' ')
+}
+
+function compute(display) {
     const displayContent = display.innerText
     const expression = displayContent.split('\xa0')
     .filter(s => {
         if (s !== '') return s
     })
-    const RPNotation = convertToRPN(expression)
+    
+    const sandbox = document.getElementsByTagName('iframe')[0]
+    const result = sandbox
+    .contentWindow
+    .Function(`"use strict"; return ${convertToJS(expression)}`)()
+    
+    return result
 }
-
-
 
 function addToDisplay(key) {
     const display = document.getElementById('display')
@@ -42,7 +79,8 @@ function addToDisplay(key) {
     }
 
     if (key.innerText === '=') {
-        compute()
+        const result = compute(display)
+        display.innerHTML += `&nbsp${key.innerText}&nbsp${result}`
         return
     }
 
@@ -64,8 +102,12 @@ function addToDisplay(key) {
 }
 
 function main() {
+    const sandbox = document.createElement('iframe')
+    sandbox.style.display = 'none'
+    document.body.appendChild(sandbox)
+
+
     const keys = document.getElementsByClassName('key')
-    const display = document.getElementById('display')
     for (const key of keys) {
         key.addEventListener('click', () => addToDisplay(key))
     }
