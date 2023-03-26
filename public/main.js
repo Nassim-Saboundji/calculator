@@ -30,11 +30,19 @@ function convertToJS(expression) {
 
     let jsExpressionArray = []
     let buffer = []
+    let emptyBuffer = true
     for (const symbol of expression) {
-    
         if (symbol === '√') {
             buffer.push(operatorMap.get('√'))
             continue
+        }
+
+        if (symbol === '(') {
+            emptyBuffer = false
+        }
+
+        if (symbol === ')') {
+            emptyBuffer = true
         }
 
         if (operatorMap.get(symbol)) {
@@ -43,12 +51,11 @@ function convertToJS(expression) {
         }
 
         jsExpressionArray.push(symbol)
-        if (buffer.length !== 0) {
+        if (buffer.length !== 0 && emptyBuffer) {
             jsExpressionArray.push(buffer[0])
             buffer = []
         }
     }
-
     return jsExpressionArray.join(' ')
 }
 
@@ -59,6 +66,8 @@ function compute(display) {
         if (s !== '') return s
     })
     
+    console.log(convertToJS(expression))
+
     const sandbox = document.getElementsByTagName('iframe')[0]
     const result = sandbox
     .contentWindow
