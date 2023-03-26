@@ -1,61 +1,34 @@
 
-// RPN = Reverse Polish Notation
-function convertToRPN(expression) {
-    console.log(expression)
-    const RPNotation = []
-    const operators = []
-
-    const operatorSet = new Set(['+', '-', '×', '÷', '√', '^', '%'])
-
-    for (const symbol of expression) {
-        if (operatorSet.has(symbol)) {
-            operators.push(symbol)
-            continue
-        }
-
-        
-    }
-}
-
 function convertToJS(expression) {
     const operatorMap = new Map([
         ['+', '+'],
         ['-', '-'],
         ['×', '*'],
         ['÷', '/'],
-        ['√', '** (1/2)'],
+        ['√', 'Math.sqrt'],
         ['^', '**'],
-        ['%', '%']
+        ['%', ' * 0.1']
     ])
 
     let jsExpressionArray = []
-    let buffer = []
-    let emptyBuffer = true
-    for (const symbol of expression) {
-        if (symbol === '√') {
-            buffer.push(operatorMap.get('√'))
-            continue
-        }
+   
+    for (let i = 0; i < expression.length; i++) {
+        const jsOperator = operatorMap.get(expression[i])
 
-        if (symbol === '(') {
-            emptyBuffer = false
-        }
-
-        if (symbol === ')') {
-            emptyBuffer = true
-        }
-
-        if (operatorMap.get(symbol)) {
-            jsExpressionArray.push(operatorMap.get(symbol))
-            continue
-        }
-
-        jsExpressionArray.push(symbol)
-        if (buffer.length !== 0 && emptyBuffer) {
-            jsExpressionArray.push(buffer[0])
-            buffer = []
+        if (jsOperator) {
+            jsExpressionArray.push(jsOperator)
+            if (jsOperator === 'Math.sqrt' 
+            && expression[i+1] !== '(') {
+                jsExpressionArray.push('(')
+                jsExpressionArray.push(expression[i+1])
+                jsExpressionArray.push(')')
+                i = i + 1
+            } 
+        } else {
+            jsExpressionArray.push(expression[i])
         }
     }
+
     return jsExpressionArray.join(' ')
 }
 
