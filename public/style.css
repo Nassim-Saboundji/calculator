@@ -4,8 +4,11 @@
     border-color: black;
     border-radius: 10px;
     min-height: 3vh;
-    margin-bottom: 1vh;
     padding: 1em;
+    margin-left: 1vw;
+    margin-right: 1vw;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
 }
 
 #keyboard {
@@ -13,6 +16,10 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
+}
+
+#history {
+    margin-left: 1vw;
 }
 
 .key {

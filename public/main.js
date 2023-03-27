@@ -65,7 +65,26 @@ function inputHandler(key) {
     if (display.innerText.includes('=')) {
         display.innerText = displayContent.pop()
     }
-    
+
+    if (key.innerText === 'HISTORY') {
+        const history = localStorage.getItem('history')
+        const historyList = document.createElement('ul')
+        historyList.id = 'history'
+        
+        if (history) {
+            for (const operation of JSON.parse(history)) {
+                const operationItem = document.createElement('li')
+                operationItem.innerText = operation
+                historyList.appendChild(operationItem)
+            }
+
+            display.innerHTML = ''
+            display.appendChild(historyList)
+        }
+
+        return
+    }
+
     if (key.innerText === 'MR') {
         display.innerHTML += `&nbsp${display.dataset.mr}`
         return
@@ -99,6 +118,16 @@ function inputHandler(key) {
         }
 
         display.innerHTML += `&nbsp${key.innerText}&nbsp${result}`
+        
+        const history = localStorage.getItem('history')
+        if (history) {
+            const updatedHistory = JSON.parse(history)
+            updatedHistory.push(display.innerText)
+            localStorage.setItem('history', JSON.stringify(updatedHistory))
+        } else {
+            localStorage.setItem('history', JSON.stringify([display.innerText]))
+        }
+        
         return
     }
 
