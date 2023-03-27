@@ -1,13 +1,9 @@
-/* :root {
-    font-size: calc(1em + 1vw);
-} */
-
-
 #display {
     border-width: 2px;
     border-style: solid;
     border-color: black;
-    height: 5vh;
+    border-radius: 10px;
+    min-height: 3vh;
     margin-bottom: 1vh;
     padding: 1em;
 }
@@ -15,6 +11,7 @@
 #keyboard {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 10px;
 }
 

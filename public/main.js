@@ -122,6 +122,10 @@ function inputHandler(key) {
 }
 
 function main() {
+
+    // Init sandbox for running js code.
+    // This is going to be used to evaluate mathematical
+    // expressions safely.
     const sandbox = document.createElement('iframe')
     sandbox.style.display = 'none'
     document.body.appendChild(sandbox)
