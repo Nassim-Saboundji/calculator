@@ -7,7 +7,7 @@ function convertToJS(expression) {
         ['÷', '/'],
         ['√', 'Math.sqrt'],
         ['^', '**'],
-        ['%', ' * 0.1']
+        ['%', ' / 100']
     ])
 
     let jsExpressionArray = []
@@ -16,8 +16,15 @@ function convertToJS(expression) {
         const jsOperator = operatorMap.get(expression[i])
 
         if (jsOperator) {
+            if (jsOperator === operatorMap.get('%')
+            && expression[i-1] !== ')') {
+                jsExpressionArray.pop()
+                jsExpressionArray.push(`(${expression[i-1]} ${jsOperator})`)
+                continue
+            }
+
             jsExpressionArray.push(jsOperator)
-            if (jsOperator === 'Math.sqrt' 
+            if (jsOperator === operatorMap.get('√')
             && expression[i+1] !== '(') {
                 jsExpressionArray.push('(')
                 jsExpressionArray.push(expression[i+1])
@@ -32,8 +39,7 @@ function convertToJS(expression) {
     return jsExpressionArray.join(' ')
 }
 
-function compute(display) {
-    const displayContent = display.innerText
+function compute(displayContent) {
     const expression = displayContent.split('\xa0')
     .filter(s => {
         if (s !== '') return s
@@ -42,9 +48,15 @@ function compute(display) {
     console.log(convertToJS(expression))
 
     const sandbox = document.getElementsByTagName('iframe')[0]
-    const result = sandbox
-    .contentWindow
-    .Function(`"use strict"; return ${convertToJS(expression)}`)()
+    
+    let result
+    try {
+        result = sandbox
+        .contentWindow
+        .Function(`"use strict"; return ${convertToJS(expression)}`)()
+    } catch (e) {
+        result = 'error'
+    }
     
     return result
 }
@@ -61,7 +73,12 @@ function addToDisplay(key) {
     }
 
     if (key.innerText === '=') {
-        const result = compute(display)
+        const result = compute(display.innerText)
+        if (result === 'error') {
+            display.innerText = 'INVALID EXPRESSION. PRESS DEL TO CLEAR.'
+            return
+        }
+
         display.innerHTML += `&nbsp${key.innerText}&nbsp${result}`
         return
     }
