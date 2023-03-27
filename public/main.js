@@ -113,7 +113,7 @@ function inputHandler(key) {
     if (key.innerText === '=') {
         const result = compute(displayContent)
         if (result === 'error') {
-            display.innerText = 'INVALID EXPRESSION. PRESS DEL TO CLEAR.'
+            display.innerText = 'INVALID EXPRESSION. CLEAR SCREEN TO CONTINUE.'
             return
         }
 
