@@ -39,9 +39,8 @@ function convertToJS(expression) {
     return jsExpressionArray.join(' ')
 }
 
-function compute(displayContent) {
-    const expression = displayContent.split('\xa0')
-    .filter(s => {
+function compute(expression) {
+    expression.filter(s => {
         if (s !== '') return s
     })
     
@@ -61,8 +60,13 @@ function compute(displayContent) {
     return result
 }
 
-function addToDisplay(key) {
+function inputHandler(key) {
     const display = document.getElementById('display')
+    const displayContent = display.innerText.split('\xa0')
+    
+    if (display.innerText.includes('=')) {
+        display.innerText = displayContent.pop()
+    }
     
     if (
         key.innerText === 'M+' || key.innerText === 'M-' 
@@ -73,7 +77,7 @@ function addToDisplay(key) {
     }
 
     if (key.innerText === '=') {
-        const result = compute(display.innerText)
+        const result = compute(displayContent)
         if (result === 'error') {
             display.innerText = 'INVALID EXPRESSION. PRESS DEL TO CLEAR.'
             return
@@ -84,7 +88,9 @@ function addToDisplay(key) {
     }
 
     if (key.innerText === 'DEL') {
-        const displayContent = display.innerText.split('\xa0')
+        // Pop twice to delete both the previous whitespace
+        // and the previous element.
+        displayContent.pop()
         displayContent.pop()
         display.innerText = displayContent.join('\xa0')
         return
@@ -108,7 +114,7 @@ function main() {
 
     const keys = document.getElementsByClassName('key')
     for (const key of keys) {
-        key.addEventListener('click', () => addToDisplay(key))
+        key.addEventListener('click', () => inputHandler(key))
     }
 }
 main()
