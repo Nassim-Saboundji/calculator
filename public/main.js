@@ -44,8 +44,6 @@ function compute(expression) {
         if (s !== '') return s
     })
     
-    console.log(convertToJS(expression))
-
     const sandbox = document.getElementsByTagName('iframe')[0]
     
     let result
@@ -68,11 +66,28 @@ function inputHandler(key) {
         display.innerText = displayContent.pop()
     }
     
-    if (
-        key.innerText === 'M+' || key.innerText === 'M-' 
-        || key.innerText === 'MR' || key.innerText === 'MC'
-    ) {
-        // todo : do something
+    if (key.innerText === 'MR') {
+        display.innerHTML += `&nbsp${display.dataset.mr}`
+        return
+    }
+
+    if (key.innerText === 'M+') {
+        display.dataset.mr = Number(display.dataset.mr) + Number(display.innerText)
+        return
+    }
+
+    if (key.innerText === 'M-') {
+        display.dataset.mr = Number(display.dataset.mr) - Number(display.innerText)
+        return
+    }
+
+    if (key.innerText === 'MC') {
+        display.dataset.mr = 0
+        return
+    }
+
+    if (key.innerText === 'CLEAR') {
+        display.innerText = ''
         return
     }
 
