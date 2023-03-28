@@ -10,8 +10,8 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(session
     ({ 
-        secret: 'keyboard cat',
-        cookie: { maxAge: 60000 },
+        secret: 'KmVL8$32JKLA@vi-sKmHn', // in prod use env variable
+        cookie: { maxAge: 900000 }, // cookie should expire after 15 min
         resave: false,
         saveUninitialized: false
     })
@@ -22,26 +22,22 @@ app.post('/signup', (req, res) => {
        
     const db = new sqlite3.Database('data.db')
     
-    let passwordHash
-    bcrypt.hash(req.body.password, 10, (err, hash) => {
-        passwordHash = hash
-    })
+    let passwordHash = bcrypt.hashSync(req.body.password, 10)
 
-    try {
-        db.serialize(() => {
+    db.serialize(() => {
+        try {
             const statement = db.prepare(`
             INSERT INTO users (username, password_hash) VALUES (?, ?);
             `, [req.body.username, passwordHash])
-
             statement.run()
             statement.finalize()
-        })
+        } catch (error) {
+            res.send({error: 'Account already exists. Select a different name'})
+        }
+    })
 
-        db.close()
-    } catch (error) {
-        console.log(error)
-        res.send(`<h1>An error occured. Please try again.</h1>`)
-    }
+    db.close()
+    
 
     res.redirect('/login.html')
 })
@@ -59,17 +55,15 @@ app.post('/login', (req, res) => {
                     res.send({error: 'failed to login'})
                 }
                 
-                let isUser
-                bcrypt.compare(
-                    req.body.password,
-                    rows[0],
-                    (_, result) => {
-                        isUser = result
-                    }
-                )
+                const isUser = bcrypt.hashSync(req.body.password, rows[0].password_hash)
 
-                if (isUser && !req.session.username) {
-                    req.session.username = req.body.username
+                if (isUser) {
+                    if (!req.session.username) {
+                        req.session.username = req.body.username
+                    }
+                    res.redirect('/')
+                } else {
+                    res.send({error: 'Login failed. Please try again.'})
                 }
             }
         )
@@ -80,6 +74,7 @@ app.post('/login', (req, res) => {
 
 app.get('/logout', (req, res) => {
     req.session.destroy()
+    res.redirect('/')
 })
 
 app.get('/currentUser', (req, res) => {
