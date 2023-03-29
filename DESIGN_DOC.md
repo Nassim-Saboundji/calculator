@@ -11,7 +11,7 @@ My approach to how the calculator will work is as follows :
 - The calculator takes user input.
 - Convert that mathematical expression provided by the user to a javascript expression.
 - Execute the javascript expression safely
-and retrieve the result.
+and retrieves the result.
 
 The idea here is to offload mathematical computation to javascript itself. To do so
 safely, I will create a sandbox from which to execute javascript. It needs to be isolated from the javascript code written to make the calculator itself.
@@ -25,10 +25,12 @@ just used for sandboxing purposes.
 
 For the networking features of the calculator (login, singup), I have gone with an express server. This server serves the calculator but is also used to define routes used for authentication.
 
-I have opted for sqlite as the database for this project as it is simple to set up and doesn't require the use of a separate server.
+I have opted for sqlite as the database for this project as it's simple to set up and doesn't require the use of a separate server.
 
-When the user creates an account I'm going to store the username and a hash of the password in the database. It is important to avoid storing the password itself in the database as a security measure.
+When the user creates an account, I'm going to store the username and a hash of the password in the database. It is important to avoid storing the password itself in the database as a security measure.
 
 When the user tries to login we verify if the password provided corresponds to the hash we store in our database. If it's the case then we can confirm that the user is who we think they are. We will then create a session and store that user's username.
 
-When the user is sent back to the calculator's page, we will make a fetch get request to a rout to get the current user's username and display it at the top.
+When the user is sent back to the calculator's page, we will make a fetch get request which relies on a session token to get the current user's username and display it at the top.
+
+Finally for the history function, I'm going to use the localStorage API for storing each of the users operations when they hit the equal operator.
