@@ -40,7 +40,7 @@ function convertToJS(expression) {
 }
 
 function compute(expression) {
-    expression.filter(s => {
+    expression = expression.filter(s => {
         if (s !== '') return s
     })
     
