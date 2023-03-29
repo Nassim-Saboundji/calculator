@@ -2,7 +2,6 @@ const sqlite3 = require('sqlite3').verbose()
 const db = new sqlite3.Database('data.db')
 
 db.serialize(() => {
-    
     try {
         db.run(`DROP TABLE IF EXISTS users`)
         db.run(`

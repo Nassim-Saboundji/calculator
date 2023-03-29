@@ -150,7 +150,28 @@ function inputHandler(key) {
     }
 }
 
-function main() {
+async function main() {
+
+    const authStatus = document.getElementById('auth-status')
+    const logoutButton = document.getElementById('logout-button')
+    
+    logoutButton.addEventListener('click', async () => {
+        const { status } = await (await fetch('/logout')).json()
+        if (status === 'success') {
+            window.location.href = '/'
+        }
+    })
+    
+    const auth = document.getElementById('auth')
+    const currentUser = await (await fetch('/currentUser')).json()
+    
+    if (currentUser.username) {
+        auth.style.display = 'none'
+        authStatus.innerText = `Current user : ${currentUser.username}`
+    } else {
+        logoutButton.style.display = 'none'
+    }
+
 
     // Init sandbox for running js code.
     // This is going to be used to evaluate mathematical

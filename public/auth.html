@@ -4,22 +4,26 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign up</title>
+    <script defer src="auth.js"></script>
+    <title>Auth</title>
 </head>
 <body>
-    <h1>Sign up</h1>
-    <form action="/signup" method="POST">
+    <header>
+        <h1 id="auth-type">Sign Up</h1>
+    </header>
+    <form>
         <div>
             <label for="username">Username :</label>
-            <input name="username" />
+            <input name="username" id="username" />
         </div>
         <div>
             <label for="password">Password :</label>
-            <input name="password" type="password" />
+            <input name="password" type="password" id="password" />
         </div>
         <div>
-            <button type="submit">Sign up</button>
+            <button type="button" id="send-button">Sign up</button>
         </div>
     </form>
+    <span id="status-indicator"></span>
 </body>
 </html>

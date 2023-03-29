@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(session
     ({ 
-        secret: 'KmVL8$32JKLA@vi-sKmHn', // in prod use env variable
+        secret: 'KmVL8$32JKLA@vi-sKmHn', // in prod use an env variable
         cookie: { maxAge: 900000 }, // cookie should expire after 15 min
         resave: false,
         saveUninitialized: false
@@ -34,15 +34,15 @@ app.post('/signup', (req, res) => {
                 statement.run(req.body.username, passwordHash, 
                 (error) => {
                     if (error) {
-                        reject('Username already in use')
+                        reject('Username already in use.')
                     }
                     resolve()
                 })
                 statement.finalize()
             })
-            res.redirect('/login.html')
+            res.send({status: 'success'})
         } catch (error) {
-            res.send({error})
+            res.send({status: 'failed', error})
         }   
     })
 
@@ -60,26 +60,33 @@ app.post('/login', (req, res) => {
                     'SELECT password_hash FROM users WHERE username = ? LIMIT 1', 
                     [req.body.username], 
                     (error, rows) => {
+                        if (error) {
+                            reject('An error occured.')
+                            return
+                        }
+                        
                         if (rows.length === 0) {
                             reject('Account does not exist.')
-                        } else {
-                            const isUser = bcrypt.compareSync(req.body.password, rows[0].password_hash)
-                            if (isUser) {
-                                if (!req.session.username) {
-                                    req.session.username = req.body.username
-                                }
-                            } else {
-                                reject('Wrong password.')
-                            }
-                            
-                            resolve()
+                            return
                         }
+                        
+                        const isUser = bcrypt.compareSync(req.body.password, rows[0].password_hash)
+                        if (!isUser) {
+                            reject('Wrong password.')
+                            return
+                        }
+                       
+                        if (!req.session.username) {
+                            req.session.username = req.body.username
+                        }
+                        
+                        resolve()
                     }
                 )
             })
-            res.redirect('/')
+            res.send({status: 'success'})
         } catch (error) {
-            res.send({error})
+            res.send({status: 'failed', error})
         }
     })
 
@@ -88,7 +95,7 @@ app.post('/login', (req, res) => {
 
 app.get('/logout', (req, res) => {
     req.session.destroy()
-    res.redirect('/')
+    res.send({status: 'success'})
 })
 
 app.get('/currentUser', (req, res) => {
