@@ -24,52 +24,66 @@ app.post('/signup', (req, res) => {
     
     let passwordHash = bcrypt.hashSync(req.body.password, 10)
 
-    db.serialize(() => {
+    db.serialize(async () => {
         try {
             const statement = db.prepare(`
             INSERT INTO users (username, password_hash) VALUES (?, ?);
-            `, [req.body.username, passwordHash])
-            statement.run()
-            statement.finalize()
+            `)
+
+            await new Promise((resolve, reject) => {
+                statement.run(req.body.username, passwordHash, 
+                (error) => {
+                    if (error) {
+                        reject('Username already in use')
+                    }
+                    resolve()
+                })
+                statement.finalize()
+            })
+            res.redirect('/login.html')
         } catch (error) {
-            res.send({error: 'Account already exists. Select a different name'})
-        }
+            res.send({error})
+        }   
     })
 
     db.close()
-    
-
-    res.redirect('/login.html')
 })
 
 app.post('/login', (req, res) => {
 
     const db = new sqlite3.Database('data.db')
 
-    db.serialize(() => {
-        db.all(
-            'SELECT password_hash FROM users WHERE username = ? LIMIT 1', 
-            [req.body.username], 
-            (error, rows) => {
-                if (error) {
-                    res.send({error: 'failed to login'})
-                }
-                
-                const isUser = bcrypt.hashSync(req.body.password, rows[0].password_hash)
-
-                if (isUser) {
-                    if (!req.session.username) {
-                        req.session.username = req.body.username
+    db.serialize(async () => {
+        try {
+            await new Promise((resolve, reject) => {
+                db.all(
+                    'SELECT password_hash FROM users WHERE username = ? LIMIT 1', 
+                    [req.body.username], 
+                    (error, rows) => {
+                        if (rows.length === 0) {
+                            reject('Account does not exist.')
+                        } else {
+                            const isUser = bcrypt.compareSync(req.body.password, rows[0].password_hash)
+                            if (isUser) {
+                                if (!req.session.username) {
+                                    req.session.username = req.body.username
+                                }
+                            } else {
+                                reject('Wrong password.')
+                            }
+                            
+                            resolve()
+                        }
                     }
-                    res.redirect('/')
-                } else {
-                    res.send({error: 'Login failed. Please try again.'})
-                }
-            }
-        )
+                )
+            })
+            res.redirect('/')
+        } catch (error) {
+            res.send({error})
+        }
     })
 
-    db.close();
+    db.close()
 })
 
 app.get('/logout', (req, res) => {
