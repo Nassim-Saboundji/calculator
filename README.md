@@ -1,5 +1,7 @@
 # calculator
 
+Was done as part of an interview process.
+
 Assuming you have nodejs install you need to do the following to run the project :
 - run npm install
 - node server.js
